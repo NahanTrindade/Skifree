@@ -1,6 +1,6 @@
 (function () {
 
-    const FPS = 30;
+    const FPS = 1200;
     const TAMX = 300;
     const TAMY = 400;
     const PROB_ARVORE = 2;
@@ -18,8 +18,10 @@
     }
 
     window.addEventListener('keydown', (e) => {
-        if(e.key === 'ArrowRight'){
-            
+        if (e.key === 'ArrowLeft') {
+            skier.mudarDirecao(-1);
+        } else if (e.key === 'ArrowRight') {
+            skier.mudarDirecao(+1);
         }
     })
 
@@ -40,6 +42,22 @@
             this.element.style.top = '20px';
             this.element.style.left = `${parseInt(TAMX / 2) - 8}px`;
         }
+
+        mudarDirecao(giro) {
+            if (this.direcao + giro >= 0 && this.direcao + giro <= 2) {
+                this.direcao += giro;
+                this.element.className = this.direcoes[this.direcao];
+            }
+        }
+
+        andar() {
+            if (this.direcao === 0) {
+                this.element.style.left = `${parseInt(this.element.style.left) - 1}px`;
+            }
+            if (this.direcao === 2) {
+                this.element.style.left = `${parseInt(this.element.style.left) + 1}px`;
+            }
+        }
     }
 
     class Arvore {
@@ -58,9 +76,10 @@
             const arvore = new Arvore();
             arvores.push(arvore);
         }
-        arvores.forEach((a) =>{
+        arvores.forEach((a) => {
             a.element.style.top = `${parseInt(a.element.style.top) - 1}px`;
         })
+        skier.andar();
     }
 
 
