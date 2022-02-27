@@ -1,0 +1,25 @@
+#montanha {
+    border: 1px solid black;
+    position: relative;   
+    overflow: hidden;
+}
+
+#skier {
+    position: absolute;
+}
+
+.para-frente {
+    background-image: url(skier.png);
+    background-position: -67px -2px;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 32px;
+}
+
+.arvore {
+    background-image: url(./obstacles.png);
+    background-position: 0px -31px;
+    width: 28px;
+    height: 32px;
+    position: absolute;
+}
