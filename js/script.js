@@ -1,12 +1,13 @@
 (function () {
 
-    const FPS = 60;
+    const FPS = 50;
     const TAMX = 300;
     const TAMY = 400;
-    const PROB_ARVORE = 2;
+    const PROB_ARVORE = 5;
 
     let montanha;
     let skier;
+    let painel;
     let gameLoop;
     let velocidade = 2;
 
@@ -15,23 +16,30 @@
     function init() {
         montanha = new Montanha();
         skier = new Skier();
+        painel = new Painel();
+
         gameLoop = setInterval(run, 1000 / FPS);
+        setInterval(() => {
+            painel.atualizaMetros(velocidade)
+        }, 1000);
     }
 
     window.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
             skier.mudarDirecao(-1);
+
         } else if (e.key === 'ArrowRight') {
             skier.mudarDirecao(+1);
         }
-        else if(e.key === 'f' && velocidade === 2) {
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'f' && velocidade === 2) {
             ++velocidade;
-            console.log('Acelerou');
-        }else if(e.key === 'f' && velocidade === 3) {
+        } else if (e.key === 'f' && velocidade === 3) {
             --velocidade;
-            console.log('Reduziu');
         }
-    })
+    });
 
     class Montanha {
         constructor() {
@@ -49,6 +57,7 @@
             this.element.className = this.direcoes[this.direcao];
             this.element.style.top = '20px';
             this.element.style.left = `${parseInt(TAMX / 2) - 8}px`;
+            this.vidas = 3;
         }
 
         mudarDirecao(giro) {
@@ -66,6 +75,39 @@
                 this.element.style.left = `${parseInt(this.element.style.left) + velocidade}px`;
             }
         }
+
+        controleLaterais() {
+            if(parseInt(skier.element.style.left) <= 0 && this.direcao == 0){
+                this.direcao = 1;
+                this.element.className = this.direcoes[this.direcao];
+            }
+            if(parseInt(skier.element.style.left) >= 285 && this.direcao == 2){
+                this.direcao = 1;
+                this.element.className = this.direcoes[this.direcao];
+            }
+        }
+    }
+
+    class Painel {
+        constructor() {
+            this.element = document.getElementById('painel');
+            this.marcador_vidas = document.getElementById('vidas');
+            this.marcador_metros = document.getElementById('metros');
+            this.vida = 3;
+            this.metros = 0;
+
+            this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
+            this.marcador_metros.innerHTML = `Metros: ${this.metros}`
+        }
+
+        tirarVida() {
+            this.vidas.innerHTML = `Vidas: ${this.vida}`
+        }
+
+        atualizaMetros(velocidade) {
+            this.metros += velocidade * 10;
+            this.marcador_metros.innerHTML = `Metros: ${this.metros}`
+        }
     }
 
     class Arvore {
@@ -78,6 +120,7 @@
         }
     }
 
+
     function run() {
 
         const random = Math.random() * 100;
@@ -86,8 +129,9 @@
             arvores.push(arvore);
         }
         arvores.forEach((a) => {
-            a.element.style.top = `${parseInt(a.element.style.top) - velocidade }px`;
+            a.element.style.top = `${parseInt(a.element.style.top) - velocidade}px`;
         })
+        skier.controleLaterais();
         skier.andar();
     }
 
