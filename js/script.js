@@ -1,6 +1,6 @@
 (function () {
 
-    const FPS = 1200;
+    const FPS = 60;
     const TAMX = 300;
     const TAMY = 400;
     const PROB_ARVORE = 2;
@@ -8,6 +8,7 @@
     let montanha;
     let skier;
     let gameLoop;
+    let velocidade = 2;
 
     const arvores = [];
 
@@ -22,6 +23,13 @@
             skier.mudarDirecao(-1);
         } else if (e.key === 'ArrowRight') {
             skier.mudarDirecao(+1);
+        }
+        else if(e.key === 'f' && velocidade === 2) {
+            ++velocidade;
+            console.log('Acelerou');
+        }else if(e.key === 'f' && velocidade === 3) {
+            --velocidade;
+            console.log('Reduziu');
         }
     })
 
@@ -52,10 +60,10 @@
 
         andar() {
             if (this.direcao === 0) {
-                this.element.style.left = `${parseInt(this.element.style.left) - 1}px`;
+                this.element.style.left = `${parseInt(this.element.style.left) - velocidade}px`;
             }
             if (this.direcao === 2) {
-                this.element.style.left = `${parseInt(this.element.style.left) + 1}px`;
+                this.element.style.left = `${parseInt(this.element.style.left) + velocidade}px`;
             }
         }
     }
@@ -71,13 +79,14 @@
     }
 
     function run() {
+
         const random = Math.random() * 100;
         if (random <= PROB_ARVORE) {
             const arvore = new Arvore();
             arvores.push(arvore);
         }
         arvores.forEach((a) => {
-            a.element.style.top = `${parseInt(a.element.style.top) - 1}px`;
+            a.element.style.top = `${parseInt(a.element.style.top) - velocidade }px`;
         })
         skier.andar();
     }
