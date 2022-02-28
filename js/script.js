@@ -3,12 +3,13 @@
     const FPS = 50;
     const TAMX = 300;
     const TAMY = 400;
-    const PROB_ARVORE = 5;
+    const PROB_ARVORE = 10;
 
     let montanha;
     let skier;
     let painel;
     let gameLoop;
+    let contMetros;
     let velocidade = 2;
 
     const arvores = [];
@@ -19,9 +20,15 @@
         painel = new Painel();
 
         gameLoop = setInterval(run, 1000 / FPS);
-        setInterval(() => {
+        contMetros = setInterval(() => {
             painel.atualizaMetros(velocidade)
         }, 1000);
+    }
+
+    function end() {
+        clearInterval(gameLoop);
+        clearInterval(contMetros);
+        window.removeEventListener('keydown',);
     }
 
     window.addEventListener('keydown', (e) => {
@@ -95,6 +102,29 @@
                 this.element.className = this.direcoes[this.direcao];
             }
         }
+
+        contato(a) {
+            let dir = parseInt(a.element.style.left) + parseInt(getComputedStyle(a.element).getPropertyValue('width'));
+            if (parseInt(a.element.style.left) > this.right) {
+                return false;
+            } else if (dir < this.left) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        bateu(painel) {
+            --this.vidas;
+
+            if (this.vidas < 0) {
+                console.log('acabou o jogo');
+                end();
+            } else {
+                painel.atualizaVida();
+
+            }
+        }
     }
 
     class Painel {
@@ -122,8 +152,9 @@
 
         }
 
-        tirarVida() {
-            this.vidas.innerHTML = `Vidas: ${this.vida}`
+        atualizaVida() {
+            --this.vida;
+            this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
         }
 
         atualizaMetros(velocidade) {
@@ -151,9 +182,8 @@
         derrubaArvore(arvores) {
             if (parseInt(this.element.style.top) < -50) {
                 this.element.remove();
-                arvores = arvores.splice(arvores.indexOf(this),arvores.indexOf(this));
+                arvores = arvores.splice(arvores.indexOf(this), arvores.indexOf(this));
             }
-            
         }
     }
 
@@ -171,8 +201,13 @@
         painel.teste();
         skier.controleLaterais();
         skier.andar();
-        
+
         arvores.forEach((a) => a.derrubaArvore(arvores));
+        arvores.forEach((a) => {
+            if (parseInt(a.element.style.top) === skier.bot && skier.contato(a)) {
+                skier.bateu(painel);
+            }
+        })
     }
 
 
