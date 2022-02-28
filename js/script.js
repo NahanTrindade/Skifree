@@ -58,6 +58,11 @@
             this.element.style.top = '20px';
             this.element.style.left = `${parseInt(TAMX / 2) - 8}px`;
             this.vidas = 3;
+
+            this.top;
+            this.left;
+            this.right;
+            this.bot;
         }
 
         mudarDirecao(giro) {
@@ -74,14 +79,18 @@
             if (this.direcao === 2) {
                 this.element.style.left = `${parseInt(this.element.style.left) + velocidade}px`;
             }
+            this.top = parseInt(this.element.style.top);
+            this.left = parseInt(this.element.style.left);
+            this.right = parseInt(this.left) + parseInt(getComputedStyle(this.element).getPropertyValue('width'));
+            this.bot = parseInt(this.top) + parseInt(getComputedStyle(this.element).getPropertyValue('height'));
         }
 
         controleLaterais() {
-            if(parseInt(skier.element.style.left) <= 0 && this.direcao == 0){
+            if (parseInt(skier.element.style.left) <= 0 && this.direcao == 0) {
                 this.direcao = 1;
                 this.element.className = this.direcoes[this.direcao];
             }
-            if(parseInt(skier.element.style.left) >= 285 && this.direcao == 2){
+            if (parseInt(skier.element.style.left) >= 285 && this.direcao == 2) {
                 this.direcao = 1;
                 this.element.className = this.direcoes[this.direcao];
             }
@@ -98,6 +107,19 @@
 
             this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
             this.marcador_metros.innerHTML = `Metros: ${this.metros}`
+
+            this.t = document.createElement('p');
+            this.element.appendChild(this.t);
+
+            this.l = document.createElement('p');
+            this.element.appendChild(this.l);
+
+            this.r = document.createElement('p');
+            this.element.appendChild(this.r);
+
+            this.b = document.createElement('p');
+            this.element.appendChild(this.b);
+
         }
 
         tirarVida() {
@@ -108,6 +130,13 @@
             this.metros += velocidade * 10;
             this.marcador_metros.innerHTML = `Metros: ${this.metros}`
         }
+
+        teste() {
+            this.t.innerHTML = `T: ${(skier.top)}`
+            this.l.innerHTML = `L: ${(skier.left)}`
+            this.r.innerHTML = `R: ${(skier.right)}`
+            this.b.innerHTML = `B: ${(skier.bot)}`
+        }
     }
 
     class Arvore {
@@ -117,6 +146,14 @@
             this.element.className = 'arvore';
             this.element.style.top = `${TAMY}px`;
             this.element.style.left = `${Math.floor(Math.random() * TAMX)}px`;
+        }
+
+        derrubaArvore(arvores) {
+            if (parseInt(this.element.style.top) < -50) {
+                this.element.remove();
+                arvores = arvores.splice(arvores.indexOf(this),arvores.indexOf(this));
+            }
+            
         }
     }
 
@@ -131,8 +168,11 @@
         arvores.forEach((a) => {
             a.element.style.top = `${parseInt(a.element.style.top) - velocidade}px`;
         })
+        painel.teste();
         skier.controleLaterais();
         skier.andar();
+        
+        arvores.forEach((a) => a.derrubaArvore(arvores));
     }
 
 
