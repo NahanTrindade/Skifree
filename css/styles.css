@@ -113,3 +113,11 @@ body {
     height: 11px;
     position: absolute;
 }
+
+.doguinho {
+    background-image: url(./skier.png);
+    background-position: -48px -209px;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+}

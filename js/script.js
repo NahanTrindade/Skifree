@@ -3,7 +3,7 @@
     const FPS = 50;
     const TAMX = 300;
     const TAMY = 400;
-    const PROB_ARVORE = 5;
+    const PROB_OBS = 5;
 
     let montanha;
     let skier;
@@ -12,7 +12,7 @@
     let contMetros;
     let velocidade = 2;
 
-    const arvores = [];
+    const obstaculos = [];
 
     function init() {
         montanha = new Montanha();
@@ -103,13 +103,19 @@
             }
         }
 
-        contato(a) {
+        contato(a, painel) {
             let dir = parseInt(a.element.style.left) + parseInt(getComputedStyle(a.element).getPropertyValue('width'));
             if (parseInt(a.element.style.left) > this.right) {
                 return false;
             } else if (dir < this.left) {
                 return false;
             } else {
+                if(a.element.className == 'cogumelo'){
+                    a.element.className = '';
+                    ++this.vidas;
+                    painel.atualizaVida(this);
+                    return false
+                }
                 return true;
             }
         }
@@ -118,13 +124,13 @@
             --this.vidas;
 
             if (this.vidas < 0) {
-                this.element.className = 'morto' ;
+                this.element.className = 'morto';
                 end();
             } else {
                 this.element.className = 'caido';
                 this.direcao = 1;
-                setTimeout(()=> {this.element.className = this.direcoes[this.direcao]},300);
-                painel.atualizaVida();
+                setTimeout(() => { this.element.className = this.direcoes[this.direcao] }, 300);
+                painel.atualizaVida(this);
             }
         }
     }
@@ -140,11 +146,11 @@
             this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
             this.marcador_pontuacao.innerHTML = `Pontuação: ${this.pontuacao}`
 
-            
+
         }
 
-        atualizaVida() {
-            --this.vida;
+        atualizaVida(skier) {
+            this.vida = skier.vidas;
             this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
         }
 
@@ -154,19 +160,21 @@
         }
     }
 
-    class Arvore {
+    class Obstaculo {
         constructor() {
             this.element = document.createElement('div');
             montanha.element.appendChild(this.element);
-            this.element.className = 'arvore_N';
+            this.randomObs = Math.floor( Math.random() * (7));
+            this.tipos = ['arvore_N', 'arvore_G', 'arvore_chamas', 'rocha', 'toco', 'cogumelo', 'doguinho'];
+            this.element.className = this.tipos[this.randomObs];
             this.element.style.top = `${TAMY}px`;
             this.element.style.left = `${Math.floor(Math.random() * TAMX)}px`;
         }
 
-        derrubaArvore(arvores) {
+        derrubaObstaculo(obstaculos) {
             if (parseInt(this.element.style.top) < -50) {
                 this.element.remove();
-                arvores = arvores.splice(arvores.indexOf(this), arvores.indexOf(this));
+                obstaculos = obstaculos.splice(obstaculos.indexOf(this), obstaculos.indexOf(this));
             }
         }
     }
@@ -175,19 +183,19 @@
     function run() {
 
         const random = Math.random() * 100;
-        if (random <= PROB_ARVORE) {
-            const arvore = new Arvore();
-            arvores.push(arvore);
+        if (random <= PROB_OBS) {
+            const obstaculo = new Obstaculo();
+            obstaculos.push(obstaculo);
         }
-        arvores.forEach((a) => {
+        obstaculos.forEach((a) => {
             a.element.style.top = `${parseInt(a.element.style.top) - velocidade}px`;
         })
         skier.controleLaterais();
         skier.andar();
 
-        arvores.forEach((a) => a.derrubaArvore(arvores));
-        arvores.forEach((a) => {
-            if (parseInt(a.element.style.top) === skier.bot && skier.contato(a)) {
+        obstaculos.forEach((a) => a.derrubaObstaculo(obstaculos));
+        obstaculos.forEach((a) => {
+            if (parseInt(a.element.style.top) === skier.bot && skier.contato(a, painel)) {
                 skier.bateu(painel);
             }
         })
