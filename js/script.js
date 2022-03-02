@@ -28,10 +28,10 @@
     function end() {
         clearInterval(gameLoop);
         clearInterval(contMetros);
-        window.removeEventListener('keydown',);
+        window.removeEventListener('keydown', controle);
     }
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', controle = (e) => {
         if (e.key === 'ArrowLeft') {
             skier.mudarDirecao(-1);
 
