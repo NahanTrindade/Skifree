@@ -27,7 +27,7 @@ body {
 }
 
 .para-frente {
-    background-image: url(skier.png);
+    background-image: url(./skier.png);
     background-position: -67px -2px;
     background-repeat: no-repeat;
     width: 15px;
@@ -35,25 +35,81 @@ body {
 }
 
 .para-esquerda {
-    background-image: url(skier.png);
+    background-image: url(./skier.png);
     background-position: -26px -43px;
     background-repeat: no-repeat;
     width: 22px;
-    height: 28px;;
+    height: 28px;
 }
 
 .para-direita {
-    background-image: url(skier.png);
+    background-image: url(./skier.png);
     background-position: -25px -6px;
     background-repeat: no-repeat;
     width: 22px;
-    height: 28px;;
+    height: 28px;
 }
 
-.arvore {
+.caido {
+    background-image: url(./skier.png);
+    background-position: -83px -84px;
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 25px;
+}
+
+.morto {
+    background-image: url(./skier.png);
+    background-position: -242px -3px;
+    background-repeat: no-repeat;
+    width: 31px;
+    height: 31px;
+}
+
+.arvore_N {
     background-image: url(./obstacles.png);
     background-position: 0px -31px;
     width: 28px;
     height: 32px;
+    position: absolute;
+}
+
+.arvore_G {
+    background-image: url(./obstacles.png);
+    background-position: -96px -66px;
+    width: 31px;
+    height: 64px;
+    position: absolute;
+}
+
+.arvore_chamas {
+    background-image: url(./obstacles.png);
+    background-position: -72px -104px;
+    width: 22px;
+    height: 26px;
+    position: absolute;
+}
+
+.rocha {
+    background-image: url(./obstacles.png);
+    background-position: -30px -52px;
+    width: 23px;
+    height: 11px;
+    position: absolute;
+}
+
+.toco {
+    background-image: url(./obstacles.png);
+    background-position: -253px -52px;
+    width: 16px;
+    height: 11px;
+    position: absolute;
+}
+
+.cogumelo {
+    background-image: url(./obstacles.png);
+    background-position: -271px -52px;
+    width: 8px;
+    height: 11px;
     position: absolute;
 }

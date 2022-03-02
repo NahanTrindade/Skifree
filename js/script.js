@@ -3,7 +3,7 @@
     const FPS = 50;
     const TAMX = 300;
     const TAMY = 400;
-    const PROB_ARVORE = 10;
+    const PROB_ARVORE = 5;
 
     let montanha;
     let skier;
@@ -118,11 +118,13 @@
             --this.vidas;
 
             if (this.vidas < 0) {
-                console.log('acabou o jogo');
+                this.element.className = 'morto' ;
                 end();
             } else {
+                this.element.className = 'caido';
+                this.direcao = 1;
+                setTimeout(()=> {this.element.className = this.direcoes[this.direcao]},300);
                 painel.atualizaVida();
-
             }
         }
     }
@@ -131,25 +133,14 @@
         constructor() {
             this.element = document.getElementById('painel');
             this.marcador_vidas = document.getElementById('vidas');
-            this.marcador_metros = document.getElementById('metros');
+            this.marcador_pontuacao = document.getElementById('pontuacao');
             this.vida = 3;
-            this.metros = 0;
+            this.pontuacao = 0;
 
             this.marcador_vidas.innerHTML = `Vidas: ${this.vida}`
-            this.marcador_metros.innerHTML = `Metros: ${this.metros}`
+            this.marcador_pontuacao.innerHTML = `Pontuação: ${this.pontuacao}`
 
-            this.t = document.createElement('p');
-            this.element.appendChild(this.t);
-
-            this.l = document.createElement('p');
-            this.element.appendChild(this.l);
-
-            this.r = document.createElement('p');
-            this.element.appendChild(this.r);
-
-            this.b = document.createElement('p');
-            this.element.appendChild(this.b);
-
+            
         }
 
         atualizaVida() {
@@ -158,15 +149,8 @@
         }
 
         atualizaMetros(velocidade) {
-            this.metros += velocidade * 10;
-            this.marcador_metros.innerHTML = `Metros: ${this.metros}`
-        }
-
-        teste() {
-            this.t.innerHTML = `T: ${(skier.top)}`
-            this.l.innerHTML = `L: ${(skier.left)}`
-            this.r.innerHTML = `R: ${(skier.right)}`
-            this.b.innerHTML = `B: ${(skier.bot)}`
+            this.pontuacao += velocidade * 10;
+            this.marcador_pontuacao.innerHTML = `Pontuação: ${this.pontuacao}`
         }
     }
 
@@ -174,7 +158,7 @@
         constructor() {
             this.element = document.createElement('div');
             montanha.element.appendChild(this.element);
-            this.element.className = 'arvore';
+            this.element.className = 'arvore_N';
             this.element.style.top = `${TAMY}px`;
             this.element.style.left = `${Math.floor(Math.random() * TAMX)}px`;
         }
@@ -198,7 +182,6 @@
         arvores.forEach((a) => {
             a.element.style.top = `${parseInt(a.element.style.top) - velocidade}px`;
         })
-        painel.teste();
         skier.controleLaterais();
         skier.andar();
 
